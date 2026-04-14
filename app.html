@@ -6,6 +6,8 @@
 <link rel="stylesheet" href="style.css">
 
 <style>
+* { box-sizing: border-box; }
+
 .section {
     margin-bottom: 20px;
     text-align: left;
@@ -30,13 +32,21 @@
     font-size: 14px;
 }
 
-select {
+.detail-box {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border-left: 5px solid #00aaff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+select, input {
     width: 100%;
     padding: 12px;
     margin-top: 10px;
     border-radius: 10px;
     border: 1px solid #ccc;
-    background: #fff;
 }
 
 .fade {
@@ -54,9 +64,9 @@ select {
 
 <nav class="navbar">
   <div class="nav-container">
+
     <div class="logo" ondblclick="adminAccess()">
-      <img src="logo.jpeg" alt="Logo">
-      <span>CJ's Water Station</span>
+      <img src="logo.jpeg">
     </div>
 
     <div class="menu-toggle" onclick="toggleMenu()">☰</div>
@@ -67,6 +77,7 @@ select {
       <a href="app.html?view=services">Services</a>
       <a href="auth.html">Login</a>
     </div>
+
   </div>
 </nav>
 
@@ -79,7 +90,15 @@ const params = new URLSearchParams(window.location.search);
 const view = params.get("view");
 const content = document.getElementById("content");
 
-/* MAIN */
+/* PRICE FUNCTION */
+function getPrice(size){
+    if(size === "5 Gallons") return 50;
+    if(size === "10 Gallons") return 60;
+    if(size === "15 Gallons") return 70;
+    return 0;
+}
+
+/* MAIN SERVICES */
 if(view === "services"){
 content.innerHTML = `
 <h2>Our Services</h2>
@@ -89,54 +108,46 @@ content.innerHTML = `
 <div class="service-card">
 <img src="refill.jpeg">
 <h3>Water Refill</h3>
-<button class="primary" onclick="order('refill')">Order Now</button>
-<button class="secondary" onclick="detail('refill')">View Details</button>
+<button class="primary" onclick="orderNow('refill')">Order Now</button>
+<button class="secondary" onclick="viewDetails('refill')">View Details</button>
 </div>
 
 <div class="service-card">
 <img src="deliver.jpeg">
 <h3>Delivery</h3>
-<button class="secondary" onclick="detail('delivery')">View Details</button>
+<button class="secondary" onclick="viewDetails('delivery')">View Details</button>
 </div>
 
 <div class="service-card">
 <img src="bottle.jpeg">
 <h3>Containers</h3>
-<button class="primary" onclick="order('container')">Order Now</button>
-<button class="secondary" onclick="detail('container')">View Details</button>
+<button class="primary" onclick="orderNow('container')">Order Now</button>
+<button class="secondary" onclick="viewDetails('container')">View Details</button>
 </div>
 
 </div>
 `;
 }
 
-/* VIEW DETAILS ONLY */
-function detail(type){
+/* VIEW DETAILS (UNCHANGED) */
+function viewDetails(type){
 
 if(type === "refill"){
 content.innerHTML = `
-<h2>Water Refill Service</h2>
+<h2>💧 Water Refill Service</h2>
 
 <div class="section">
-<p>Clean, safe, and purified drinking water using advanced filtration.</p>
-</div>
-
-<div class="section">
-<h3>💡 Highlights</h3>
-<div class="info-grid">
-<div class="info-box">Multi-stage filtration</div>
-<div class="info-box">UV sterilization</div>
-<div class="info-box">Quality checked</div>
-<div class="info-box">Safe for daily use</div>
+<div class="detail-box">
+Clean, purified drinking water processed through multi-stage filtration to ensure safety and quality.
 </div>
 </div>
 
 <div class="section">
-<h3>📦 Sizes</h3>
-<div class="info-grid">
-<div class="info-box">5 Gallons</div>
-<div class="info-box">10 Gallons</div>
-<div class="info-box">15 Gallons</div>
+<h3>💰 Pricing</h3>
+<div class="detail-box">
+5 Gallons - ₱50 <br>
+10 Gallons - ₱60 <br>
+15 Gallons - ₱70
 </div>
 </div>
 
@@ -145,111 +156,62 @@ content.innerHTML = `
 }
 
 if(type === "container"){
-content.innerHTML = `
-<h2>Water Containers</h2>
-
-<div class="section">
-<p>Durable, food-grade containers for safe water storage.</p>
-</div>
-
-<div class="section">
-<h3>💡 Features</h3>
-<div class="info-grid">
-<div class="info-box">BPA-free</div>
-<div class="info-box">Leak-proof</div>
-<div class="info-box">Reusable</div>
-<div class="info-box">Hygienic</div>
-</div>
-</div>
-
-<div class="section">
-<h3>📦 Sizes</h3>
-<div class="info-grid">
-<div class="info-box">5 Gallons</div>
-<div class="info-box">10 Gallons</div>
-<div class="info-box">15 Gallons</div>
-</div>
-</div>
-
-<button class="secondary" onclick="goBack()">Back</button>
-`;
+content.innerHTML = `<h2>🧴 Water Containers</h2>
+<button class="secondary" onclick="goBack()">Back</button>`;
 }
 
 if(type === "delivery"){
-content.innerHTML = `
-<h2>Delivery Service</h2>
-
-<div class="section">
-<p>Fast and safe water delivery to your home.</p>
-</div>
-
-<div class="section">
-<h3>🚚 Info</h3>
-<div class="info-grid">
-<div class="info-box">₱50 - ₱100 fee</div>
-<div class="info-box">Nearby areas only</div>
-<div class="info-box">1–3 hours delivery</div>
-</div>
-</div>
-
-<button class="secondary" onclick="goBack()">Back</button>
-`;
+content.innerHTML = `<h2>🚚 Delivery Service</h2>
+<button class="secondary" onclick="goBack()">Back</button>`;
 }
 
 }
 
-/* ORDER ONLY */
-function order(type){
+/* ORDER FORM */
+function orderNow(type){
 
-if(type === "refill"){
 content.innerHTML = `
-<h2>Order Refill</h2>
+<h2>Order - ${type}</h2>
 
 <input placeholder="Full Name" id="name">
 <input placeholder="Address" id="address">
 <input placeholder="Contact Number" id="phone">
 
-<select id="size">
+<label><b>Size (ORDER HERE)</b></label>
+<select id="size" onchange="computeTotal()">
 <option value="">Select Size</option>
-<option>5 Gallons</option>
-<option>10 Gallons</option>
-<option>15 Gallons</option>
+<option>5 Gallons - ₱50</option>
+<option>10 Gallons - ₱60</option>
+<option>15 Gallons - ₱70</option>
 </select>
 
-<input type="number" placeholder="Quantity" id="qty">
+<input type="number" placeholder="Quantity" id="qty" oninput="computeTotal()">
 <input type="date" id="date">
 
-<button class="primary" onclick="submitOrder('refill')">Submit Order</button>
+<div id="totalDisplay" style="margin-top:10px; font-weight:bold; color:#0077aa;">
+Total: ₱0
+</div>
+
+<button class="primary" onclick="submitOrder('${type}')">Submit Order</button>
 <button class="secondary" onclick="goBack()">Back</button>
 `;
-}
-
-if(type === "container"){
-content.innerHTML = `
-<h2>Order Container</h2>
-
-<input placeholder="Full Name" id="name">
-<input placeholder="Address" id="address">
-<input placeholder="Contact Number" id="phone">
-
-<select id="size">
-<option value="">Select Size</option>
-<option>5 Gallons</option>
-<option>10 Gallons</option>
-<option>15 Gallons</option>
-</select>
-
-<input type="number" placeholder="Quantity" id="qty">
-<input type="date" id="date">
-
-<button class="primary" onclick="submitOrder('container')">Submit Order</button>
-<button class="secondary" onclick="goBack()">Back</button>
-`;
-}
 
 }
 
-/* SUBMIT */
+/* COMPUTE TOTAL */
+function computeTotal(){
+let sizeText = document.getElementById("size").value;
+let qty = parseInt(document.getElementById("qty").value) || 0;
+
+let size = sizeText.split(" - ")[0];
+let price = getPrice(size);
+let total = price * qty;
+
+document.getElementById("totalDisplay").innerText =
+"Total: ₱" + total;
+}
+
+/* SUBMIT ORDER */
 function submitOrder(type){
 
 if(!localStorage.getItem("session")){
@@ -257,24 +219,55 @@ location="auth.html";
 return;
 }
 
+let name = document.getElementById("name").value;
+let address = document.getElementById("address").value;
+let phone = document.getElementById("phone").value;
+
+let sizeText = document.getElementById("size").value;
+let size = sizeText.split(" - ")[0];
+
+let qty = document.getElementById("qty").value;
+let date = document.getElementById("date").value;
+
+let price = getPrice(size);
+let total = price * qty;
+
 let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
 orders.push({
 user: localStorage.getItem("session"),
 service: type,
-name: document.getElementById("name").value,
-address: document.getElementById("address").value,
-phone: document.getElementById("phone").value,
-size: document.getElementById("size")?.value,
-qty: document.getElementById("qty")?.value,
-date: document.getElementById("date")?.value,
+name,
+address,
+phone,
+size,
+qty,
+price,
+total,
+date,
 status: "Pending"
 });
 
 localStorage.setItem("orders", JSON.stringify(orders));
 
-alert("Order submitted!");
-location="app.html?view=services";
+content.innerHTML = `
+<div class="fade">
+
+<h2>🎉 Thank You for Your Order!</h2>
+
+<div class="info-grid">
+<div class="info-box">Service: ${type}</div>
+<div class="info-box">Name: ${name}</div>
+<div class="info-box">Size: ${size}</div>
+<div class="info-box">Qty: ${qty}</div>
+<div class="info-box">Price: ₱${price}</div>
+<div class="info-box">Total: ₱${total}</div>
+</div>
+
+<button class="primary" onclick="goBack()">Back</button>
+
+</div>
+`;
 }
 
 /* BACK */
@@ -293,6 +286,10 @@ alert("Access denied");
 }
 }
 </script>
+
+<footer style="text-align: center; padding: 15px; margin-top: 20px; background-color: #f1f1f1;">
+  <p>© 2026 CJ's Water Station. All rights reserved.</p>
+</footer>
 
 </body>
 </html>
